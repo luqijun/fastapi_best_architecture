@@ -11,6 +11,7 @@ from backend.app.admin.schema.user import (
     GetUserInfoWithRelationDetail,
     RegisterUserParam,
     ResetPasswordParam,
+    ResetPasswordForceParam,
     UpdateUserParam,
     UpdateUserRoleParam,
 )
@@ -41,6 +42,14 @@ async def add_user(request: Request, obj: AddUserParam) -> ResponseSchemaModel[G
 @router.post('/password/reset', summary='密码重置', dependencies=[DependsJwtAuth])
 async def password_reset(request: Request, obj: ResetPasswordParam) -> ResponseModel:
     count = await user_service.pwd_reset(request=request, obj=obj)
+    if count > 0:
+        return response_base.success()
+    return response_base.fail()
+
+
+@router.post('/{pk}/password/reset', summary='密码重置(强制)', dependencies=[DependsJwtAuth])
+async def password_reset_force(request: Request, pk: Annotated[int, Path(...)], obj: ResetPasswordForceParam) -> ResponseModel:
+    count = await user_service.pwd_reset_force(request=request, pk=pk, obj=obj)
     if count > 0:
         return response_base.success()
     return response_base.fail()

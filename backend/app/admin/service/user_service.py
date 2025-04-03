@@ -14,6 +14,7 @@ from backend.app.admin.schema.user import (
     AvatarParam,
     RegisterUserParam,
     ResetPasswordParam,
+    ResetPasswordForceParam,
     UpdateUserParam,
     UpdateUserRoleParam,
 )
@@ -109,6 +110,23 @@ class UserService:
             for prefix in key_prefix:
                 await redis_client.delete_prefix(prefix)
             return count
+        
+    @staticmethod
+    async def pwd_reset_force(*, request: Request, pk: int, obj: ResetPasswordForceParam) -> int:
+        async with async_db_session.begin() as db:
+            user = await user_dao.get(db, pk)
+            if not user:
+                raise errors.NotFoundError(msg='用户不存在')
+            new_pwd = get_hash_password(obj.new_password, user.salt)
+            count = await user_dao.reset_password(db, pk, new_pwd)
+            key_prefix = [
+                f'{settings.TOKEN_REDIS_PREFIX}:{request.user.id}',
+                f'{settings.TOKEN_REFRESH_REDIS_PREFIX}:{request.user.id}',
+                f'{settings.JWT_USER_REDIS_PREFIX}:{request.user.id}',
+            ]
+            for key in key_prefix:
+                await redis_client.delete_prefix(key)
+            return count    
 
     @staticmethod
     async def get_userinfo(*, username: str) -> User:
