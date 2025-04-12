@@ -47,9 +47,9 @@ class Settings(BaseSettings):
     FASTAPI_TITLE: str = 'FastAPI'
     FASTAPI_VERSION: str = '0.0.1'
     FASTAPI_DESCRIPTION: str = 'FastAPI Best Architecture'
-    FASTAPI_DOCS_URL: str = '/docs'
-    FASTAPI_REDOC_URL: str = '/redoc'
-    FASTAPI_OPENAPI_URL: str | None = '/openapi'
+    FASTAPI_DOCS_URL: str = '/api/v1/docs'
+    FASTAPI_REDOC_URL: str = '/api/v1/redoc'
+    FASTAPI_OPENAPI_URL: str | None = '/api/v1/openapi'
     FASTAPI_STATIC_FILES: bool = True
 
     # 数据库
