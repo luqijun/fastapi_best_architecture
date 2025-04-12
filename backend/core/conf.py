@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     ENVIRONMENT: Literal['dev', 'pro']
 
     # .env 数据库
+    DATABASE_NAME: str = 'fba'
     DATABASE_TYPE: Literal['mysql', 'postgresql']
     DATABASE_HOST: str
     DATABASE_PORT: int

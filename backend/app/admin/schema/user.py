@@ -49,6 +49,10 @@ class ResetPasswordParam(SchemaBase):
     confirm_password: str = Field(description='确认密码')
 
 
+class ResetPasswordForceParam(SchemaBase):
+    new_password: str = Field(description='新密码')
+
+
 class UserInfoSchemaBase(SchemaBase):
     """用户信息基础模型"""
 
